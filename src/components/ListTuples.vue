@@ -61,6 +61,7 @@ onMounted(fetchTuples)
 
 async function fetchTuples() {
   isLoading.value = true
+  tuples.value = []
 
   try {
     const res = await axios.get(path).catch((err) => {
