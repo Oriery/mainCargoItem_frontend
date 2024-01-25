@@ -1,11 +1,14 @@
 <template>
   <div class="flex flex-col gap-1 border-2 border-gray-600 rounded-md  pa-2">
+    <span class="font-bold text-start">{{ entity.titleSingular }}</span>
     <div class="flex flex-col gap-1">
       <TupleProperty
-        v-for="property in Object.entries(tuple).map(([name, value]) => ({ name, value }))"
-        :key="property.name"
-        :propertyName="property.name"
-        :propertyValue="property.value"
+        v-for="property in entity.showProperties"
+        :key="property.key"
+        :property="property"
+        :propertyValue="tuple[property.key]"
+        :entity="props.entity"
+        :tuple-id="tuple.id"
       />
     </div>
     <div class="flex gap-1">
