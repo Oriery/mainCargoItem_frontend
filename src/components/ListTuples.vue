@@ -7,14 +7,23 @@
       >
         {{ entity.titlePlural }}
       </h1>
-      <v-btn
-        color="grey-lighten-1"
-        @click="fetchTuples"
-        icon="mdi-refresh"
-        size="x-small"
-        variant="outlined"
-        :loading="isLoading"
-      />
+      <div class="flex gap-1">
+        <v-btn
+          color="grey-lighten-1"
+          @click="fetchTuples"
+          icon="mdi-refresh"
+          size="x-small"
+          variant="outlined"
+          :loading="isLoading"
+        />
+        <v-btn
+          color="green-lighten-1"
+          @click="createTuple"
+          icon="mdi-plus"
+          size="x-small"
+          variant="outlined"
+        />
+      </div>
     </div>
     <div
       v-if="tuples.length"
@@ -48,6 +57,10 @@ const props = defineProps<{
   entity: EEntity
   forcedPath?: string
   retriever?: Retriever
+  parent?: {
+    id: number | string
+    entity: EEntity
+  }
 }>()
 
 const entity = entities[props.entity]
@@ -78,5 +91,27 @@ async function fetchTuples() {
   } finally {
     isLoading.value = false
   }
+}
+
+async function createTuple() {
+  await (() => {
+    const parentEntity = props.parent && entities[props.parent.entity]
+
+    if (!parentEntity?.content?.createChild) {
+      return axios.post(path, {
+        id: 10000000 + Math.floor(Math.random() * 10000000),
+      })
+    } else {
+      return parentEntity.content!.createChild(props.parent!.id)
+    }
+  })().then(
+    () => {
+      pushNotify.success(`Created ${entity.titleSingular}`)
+      fetchTuples()
+    },
+    (error) => {
+      pushNotify.error(`Failed to create ${entity.titleSingular}: ${error.message}`)
+    },
+  )
 }
 </script>

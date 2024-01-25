@@ -1,3 +1,5 @@
+import axios from "axios"
+
 export type Tuple = Record<string, any>
 
 export type Retriever = (tuple: Tuple) => Tuple
@@ -10,6 +12,7 @@ export type Entity = {
     relativePath: string
     retriever?: Retriever
     entity: EEntity
+    createChild?: (parentId : number | string) => Promise<void>
   },
   showProperties: Record<string, Property>
 }
@@ -32,7 +35,7 @@ const itemEntity: Entity = {
   titlePlural: 'Items',
   content: {
     relativePath: '/content',
-    entity: EEntity.Item,
+    entity: EEntity.Item
   },
   showProperties: {
     id: {
@@ -82,6 +85,21 @@ const transportEntity: Entity = {
     relativePath: '/content?$expand=item',
     retriever: (tuple: Tuple) => tuple.item,
     entity: EEntity.Item,
+    createChild: async (parentId: number | string) => {
+      const id = 10000000 + Math.floor(Math.random() * 10000000)
+      Promise.all(
+        [
+          axios.post(import.meta.env.VITE_BACK_URL + '/main/Item', {
+            id,
+            containedIn_id: null,
+          }),
+          axios.post(import.meta.env.VITE_BACK_URL + '/main/Transport2RootItem', {
+            transport_id: parentId,
+            item_id: id,
+          }),
+        ] 
+      )
+    }
   },
   showProperties: {
     id: {
