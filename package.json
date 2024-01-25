@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.3.67",
+    "axios": "^1.6.6",
     "notivue": "^1.4.5",
     "pinia": "^2.1.6",
     "unimport": "^3.7.0",
