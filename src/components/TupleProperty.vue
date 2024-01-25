@@ -48,7 +48,6 @@ import { ref } from 'vue'
 import type { Property, EEntity } from '@/types'
 import { entities } from '@/types';
 import axios from 'axios';
-import { ca } from 'vuetify/locale';
 
 const props = defineProps<{
   entity: EEntity

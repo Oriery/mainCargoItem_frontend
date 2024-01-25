@@ -10,15 +10,28 @@
         variant="outlined"
       />
     </div>
-    <div class="flex flex-col gap-1">
-      <TupleProperty
-        v-for="property in entity.showProperties"
-        :key="property.key"
-        :property="property"
-        :propertyValue="tuple[property.key]"
-        :entity="props.entity"
-        :tuple-id="tuple.id"
-      />
+    <div class="flex justify-between gap-1">
+      <div class="flex flex-col gap-1 grow">
+        <TupleProperty
+          v-for="property in entity.showProperties"
+          :key="property.key"
+          :property="property"
+          :propertyValue="tuple[property.key]"
+          :entity="props.entity"
+          :tuple-id="tuple.id"
+        />
+      </div>
+      <div
+        class="flex flex-col gap-1"
+        v-if="entity.boundFunctions"
+      >
+        <TupleBoundFunction
+          v-for="func in entity.boundFunctions"
+          :key="func.name"
+          :func="func"
+          :tuple-id="tuple.id"
+        />
+      </div>
     </div>
     <div class="flex gap-1">
       <v-btn
@@ -51,6 +64,7 @@ import { entities } from '../types'
 import TupleProperty from './TupleProperty.vue'
 import ListTuples from './ListTuples.vue'
 import axios from 'axios'
+import TupleBoundFunction from './TupleBoundFunction.vue'
 
 const props = defineProps<{
   tuple: Tuple
@@ -61,11 +75,15 @@ const showingContent = ref(false)
 const entity = entities[props.entity]
 
 async function deleteTuple() {
-  await axios.delete(entity.path + `(${props.tuple.id})`).then(() => {
-    pushNotify.success(`Deleted ${entity.titleSingular} ${props.tuple.id}`)
-  }, (error) => {
-    pushNotify.error(`Failed to delete ${entity.titleSingular} ${props.tuple.id}: ${error.message}`)
-  })
+  await axios.delete(entity.path + `(${props.tuple.id})`).then(
+    () => {
+      pushNotify.success(`Deleted ${entity.titleSingular} ${props.tuple.id}`)
+    },
+    (error) => {
+      pushNotify.error(
+        `Failed to delete ${entity.titleSingular} ${props.tuple.id}: ${error.message}`,
+      )
+    },
+  )
 }
-
 </script>

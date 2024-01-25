@@ -15,6 +15,12 @@ export type Entity = {
     createChild?: (parentId : number | string) => Promise<void>
   },
   showProperties: Record<string, Property>
+  boundFunctions?: Record<string, BoundFunction>
+}
+
+export type BoundFunction = {
+  name: string
+  fn: (id: number | string) => Promise<void>
 }
 
 export type Property = {
@@ -69,7 +75,7 @@ const itemEntity: Entity = {
       canEdit: true,
     },
     isMci: {
-      key: 'isMci',
+      key: 'is_mci',
       name: 'Is MCI',
       type: 'boolean',
       canEdit: false,
@@ -121,6 +127,14 @@ const transportEntity: Entity = {
       canEdit: false,
     },
   },
+  boundFunctions: {
+    updateMcis: {
+      name: 'Recalculate MCIs',
+      fn: async (id: number | string) => {
+        await axios.post(import.meta.env.VITE_BACK_URL + `/main/Transport(${id})/updateMcis`, {})
+      }
+    }
+  }
 }
 
 export const entities: Record<EEntity, Entity> = {

@@ -84,7 +84,7 @@ async function fetchTuples() {
     })
 
     if (props.retriever) {
-      tuples.value = res.data.value.map(props.retriever)
+      tuples.value = res.data.value.map(props.retriever).filter((x) => x)
     } else {
       tuples.value = res.data.value
     }
