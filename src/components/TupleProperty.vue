@@ -76,6 +76,7 @@ async function submitEdit() {
   }).then((res) => {
     pushNotify.success(`Updated ${props.property.name}`)
     savedPropertyValue.value = newVal
+    newPropertyValue.value = newVal
   }, (err) => {
     console.error(err)
     pushNotify.error(err.message)
