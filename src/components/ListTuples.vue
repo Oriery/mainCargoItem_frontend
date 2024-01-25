@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import type { Tuple, EEntity, Retriever } from '../types'
 import { entities } from '../types'
 import TupleComponent from './TupleComponent.vue'
@@ -84,7 +84,7 @@ async function fetchTuples() {
     })
 
     if (props.retriever) {
-      tuples.value = res.data.value.map(props.retriever).filter((x) => x)
+      tuples.value = res.data.value.map(props.retriever).filter((x: any) => x)
     } else {
       tuples.value = res.data.value
     }
